@@ -9,6 +9,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let guessedWordCount = 0;
 
   const keys = document.querySelectorAll(".keyboard-row button");
+  
+  document.getElementById("button1").innerHTML = word.charAt(0);
+  document.getElementById("button2").innerHTML = word.charAt(1);
+  document.getElementById("button3").innerHTML = word.charAt(2);
+  document.getElementById("button4").innerHTML = word.charAt(3);
+  document.getElementById("button5").innerHTML = word.charAt(4);
+  
+  for (let i = 1; i < keys.length; i++) {
+      keys[i].setAttribute("data-key", word.charAt(i - 1));
+  }
 
   function getCurrentWordArr() {
     const numberOfGuessedWords = guessedWords.length;
