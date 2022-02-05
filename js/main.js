@@ -1,12 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
-  createSquares();
-  //getNewWord();
+	
+	const modal_container = document.getElementById("modal_container");
+	const share = document.getElementById("share");
+	
+	const startDate = new Date("02/01/2022");
+	
+	const words = [
+	"jolly",
+	"silly",
+	"dumpy",
+	"poggy",
+	"thicc",
+	"frgor",
+	"bussy",
+	"jklol",
+	"bruhh",
+	"burgr",
+	"bark!",
+	"meow!",
+	"lmfao",
+	"doggy",
+	"pepis",
+	"bonky",
+	"wowza",
+	"prank",
+	"choco",
+	"thigh",
+	"booba",
+	"crunk",
+	"busty",
+	"mlems",
+	"boops"
+  ];
+	
+	createSquares();
+	//getNewWord();
 
-  let guessedWords = [[]];
-  let availableSpace = 1;
+	let guessedWords = [[]];
+	let availableSpace = 1;
 
-  let word = "poggy";
-  let guessedWordCount = 0;
+	let word = "thicc";
+	let dayNumber = "5";
+	let guessedWordCount = 0;
+
+	let score = "Word # #/1\n 🟩🟩🟩🟩🟩";
+	let emojiArrangement = "🟩🟩🟩🟨🟨";
+	
+	dayNumber = getNumberOfDays();
+	word = words[(parseInt(dayNumber) - 1) % words.length];
+
+	share.onclick = () => {
+		navigator.clipboard.writeText(score);
+		window.alert("Copied to clipboard!");
+	};
 
   const keys = document.querySelectorAll(".keyboard-row button");
   
@@ -18,6 +64,25 @@ document.addEventListener("DOMContentLoaded", () => {
   
   for (let i = 1; i < keys.length; i++) {
       keys[i].setAttribute("data-key", word.charAt(i - 1));
+  }
+  
+  function getFormattedDate(date) {
+	var formattedDateString = date.getMonth() + 1;
+	formattedDateString += "/";
+	formattedDateString += date.getDate();
+	formattedDateString += "/";
+	formattedDateString += date.getFullYear();
+	return formattedDateString;
+}
+  
+  function getNumberOfDays() {
+	var today = new Date();
+	var formattedToday = new Date(getFormattedDate(today));
+	
+	var differenceInTime = formattedToday.getTime() - startDate.getTime();
+	var differenceInDays = differenceInTime / (1000 * 3600 * 24);
+	
+	return differenceInDays;
   }
 
   function getCurrentWordArr() {
@@ -38,6 +103,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function getEmojiColor(letter, index) {
+    const isCorrectLetter = word.includes(letter);
+
+    if (!isCorrectLetter) {
+      return "⬛";
+    }
+
+    const letterInThatPosition = word.charAt(index);
+    const isCorrectPosition = letter === letterInThatPosition;
+
+    if (isCorrectPosition) {
+      return "🟩";
+    }
+
+    return "🟨";
+  }
+  
   function getTileColor(letter, index) {
     const isCorrectLetter = word.includes(letter);
 
@@ -64,9 +146,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 	const firstLetterId = guessedWordCount * 5 + 1;
     const interval = 200;
+	emojiArrangement = "";
 	currentWordArr.forEach((letter, index) => {
 	  setTimeout(() => {
 		const tileColor = getTileColor(letter, index);
+		emojiArrangement += getEmojiColor(letter, index);
 
 		const letterId = firstLetterId + index;
 		const letterEl = document.getElementById(letterId);
@@ -77,13 +161,22 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 	setTimeout(() => {
 		const currentWord = currentWordArr.join("");
-	
+		
 		if(currentWord === word) {
-			window.alert(`Yay! ${word}!`);
+			score = `Word ${dayNumber} 1/1\n`;
+			score += emojiArrangement;
+			document.getElementById("game_result_word").innerHTML = `Yay! The word was ${word}!`;
+			document.getElementById("game_result").innerHTML = "Look at you go, you lil word wizard! UwU";
 		}
 		else {
-			window.alert(`Excuse me! The word is ${word}, silly!`);
+			score = `Word ${dayNumber} 0/1\n`;
+			score += emojiArrangement;
+			document.getElementById("game_result_word").innerHTML = "Whoops!";
+			document.getElementById("game_result").innerHTML = `Exuse me! The word was ${word}, silly!`;
 		}
+		
+		modal_container.classList.add('show');
+		
 	}, interval * 6);
 	
 	guessedWordCount += 1;
@@ -111,6 +204,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     lastLetterEl.textContent = "";
     availableSpace = availableSpace - 1;
+  }
+  
+  function shareScore() {
+	  score.select();
+	  score.setSelectRange(0, 99999);
+	  
+	  navigator.clipboard.writeText(score.value);
+	  
+	  window.alert("Copied to clipboard!");
   }
 
   for (let i = 0; i < keys.length; i++) {

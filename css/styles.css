@@ -104,3 +104,82 @@ header {
 .spacer-half {
   flex-grow: 0.5;
 }
+
+.modal-container {
+	background-color: rgba(0, 0, 0, 0.3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	opacity: 0;
+	pointer-events: none;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	transition: opacity 0.3s ease;
+}
+
+.modal-container.show {
+	pointer-events: auto;
+	opacity: 1;
+}
+
+.modal {
+	background-color: #d7d9db;
+	border-radius: 5px;
+	padding: 30px 50px;
+	width: 600px;
+	max-width: 100%;
+	text-align: center;
+}
+
+.modal h1 {
+	margin: 0;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 140px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.submit_button {
+	background-color: rgb(83, 141, 78);
+	border: 0;
+	border-radius: 5px;
+	color: #ffffff;
+	padding: 10px 25px;
+}
