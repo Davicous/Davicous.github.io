@@ -165,12 +165,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		if(currentWord === word) {
 			score = `Word ${dayNumber} 1/1\n`;
 			score += emojiArrangement;
+			score += "\nhttps://davicous.github.io/";
 			document.getElementById("game_result_word").innerHTML = `Yay! The word was ${word}!`;
 			document.getElementById("game_result").innerHTML = "Look at you go, you lil word wizard! UwU";
 		}
 		else {
 			score = `Word ${dayNumber} 0/1\n`;
 			score += emojiArrangement;
+			score += "\nhttps://davicous.github.io/";
 			document.getElementById("game_result_word").innerHTML = "Whoops!";
 			document.getElementById("game_result").innerHTML = `Exuse me! The word was ${word}, silly!`;
 		}
