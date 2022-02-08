@@ -13,11 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	"thicc",
 	"frgor",
 	"bussy",
-	"jklol",
-	"bruhh",
+	"zordy",
+	"snarf",
+	"cream",
+	"moist",
+	"  no",
+	"bruh",
 	"burgr",
 	"bark!",
 	"meow!",
+	" sus ",
 	"lmfao",
 	"doggy",
 	"pepis",
@@ -30,7 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	"crunk",
 	"busty",
 	"mlems",
-	"boops"
+	"boops",
+	"sussy",
+	"baka",
   ];
 	
 	createSquares();
@@ -39,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	let guessedWords = [[]];
 	let availableSpace = 1;
 
-	let word = "thicc";
+	let word = "dumpy";
 	let dayNumber = "5";
 	let guessedWordCount = 0;
 
