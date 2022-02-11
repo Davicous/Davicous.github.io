@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	"sussy",
 	"baka",
   ];
-	
+  
 	createSquares();
 	//getNewWord();
 
@@ -55,6 +55,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 	dayNumber = getNumberOfDays();
 	word = words[(parseInt(dayNumber) - 1) % words.length];
+	
+	const motMessages = [
+	"You got the word! You're truly amazing! :) ",
+	"You rock! Keep being you and keep being awesome! B) ",
+	`You're ${word}er than ${word}! You're the ${word}est of all ${word}s!`,
+	"Look at you go, you lil word wizard! UwU",
+	"Heck yeah! You're a heckin boss! B) ",
+	"You're killin it, bruv! Show the world who's boss!!!",
+	"Literally in awe of your greatness! Woo!",
+	"You're the master of words, and I'm your biggest fan!",
+	"You matter. You're doing great! Keep on keeping on!",
+	"I hope you have an awesome day or night, wherever you are! :) ",
+	`This one goes out to you! This one's for the person who got the word ${word}!`,
+	"You just light up the room. :) ",
+	"You make the world a better place! :D",
+	"You are incredibly stunning! Keep it up!! :) ",
+	"I'm glad you're here, and so are many other people! :3",
+	`You may not be ${word}y, but you sure are amazing!`,
+	"The world is much more colorful with you in it!",
+	"You're rad! I want more people to be like you!",
+  ];
 
 	share.onclick = () => {
 		navigator.clipboard.writeText(score);
@@ -174,14 +195,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			score += emojiArrangement;
 			score += "\nhttps://davicous.github.io/";
 			document.getElementById("game_result_word").innerHTML = `Yay! The word was ${word}!`;
-			document.getElementById("game_result").innerHTML = "Look at you go, you lil word wizard! UwU";
+			document.getElementById("game_result").innerHTML = motMessages[Math.floor(Math.random()*motMessages.length)];
 		}
 		else {
 			score = `Word ${dayNumber} 0/1\n`;
 			score += emojiArrangement;
 			score += "\nhttps://davicous.github.io/";
 			document.getElementById("game_result_word").innerHTML = "Whoops!";
-			document.getElementById("game_result").innerHTML = `Exuse me! The word was ${word}, silly!`;
+			document.getElementById("game_result").innerHTML = `Exuse me! The word was ${word}, silly! :D`;
 		}
 		
 		modal_container.classList.add('show');
