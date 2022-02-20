@@ -1,10 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 	
-	const modal_container = document.getElementById("modal_container");
-	const share = document.getElementById("share");
-	
-	const startDate = new Date("02/01/2022");
-	
 	const words = [
 	"jolly",
 	"silly",
@@ -24,8 +19,29 @@ document.addEventListener("DOMContentLoaded", () => {
 	"meow!",
 	" sus ",
 	"lmfao",
-	"doggy",
-	"pepis",
+	"doggington",
+	"hi mara! :)",
+	"brooke mega cute",
+	"snarflet",
+	"antidisestablishmentarianism",
+	"chonkster",
+	"noot noot",
+	"craving cookout",
+	"egg",
+	"eep",
+	"hippomonstrosesquippedaliophobia",
+	"perchance.",
+	"icecream",
+	"hot choccy",
+	"i'm really hungry rn",
+	"pump it up kitty",
+	"just pump it up kitty cat",
+	"where ya at?",
+	"there ya go!",
+	"somebody once told me",
+	"the world was gunna roll me",
+	"i aint the sharpest tool",
+	"in the sheeed",
 	"bonky",
 	"wowza",
 	"prank",
@@ -38,23 +54,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	"boops",
 	"sussy",
 	"baka",
+	"pepis",
   ];
-  
-	createSquares();
-	//getNewWord();
 
-	let guessedWords = [[]];
-	let availableSpace = 1;
-
-	let word = "dumpy";
-	let dayNumber = "5";
-	let guessedWordCount = 0;
+	const modal_container = document.getElementById("modal_container");
+	const share = document.getElementById("share");
+	share.onclick = () => {
+		navigator.clipboard.writeText(score);
+		window.alert("Copied to clipboard!");
+	};
+	
+	const keys = document.querySelectorAll(".keyboard-row button");
+	
+	const startDate = new Date("02/01/2022");
+	
+	let dayNumber = getNumberOfDays();
+	let word = words[(parseInt(dayNumber) - 1) % words.length];
+	let wordLength = word.length;
+	let guessedWord = "";
 
 	let score = "Word # #/1\n 🟩🟩🟩🟩🟩";
-	let emojiArrangement = "🟩🟩🟩🟨🟨";
-	
-	dayNumber = getNumberOfDays();
-	word = words[(parseInt(dayNumber) - 1) % words.length];
+	let emojiArrangement = "";
 	
 	const motMessages = [
 	"You got the word! You're truly amazing! :) ",
@@ -76,22 +96,45 @@ document.addEventListener("DOMContentLoaded", () => {
 	"The world is much more colorful with you in it!",
 	"You're rad! I want more people to be like you!",
   ];
-
-	share.onclick = () => {
-		navigator.clipboard.writeText(score);
-		window.alert("Copied to clipboard!");
-	};
-
-  const keys = document.querySelectorAll(".keyboard-row button");
+	
+	createKeyboardButtons();
+	createSquares();
   
-  document.getElementById("button1").innerHTML = word.charAt(0);
-  document.getElementById("button2").innerHTML = word.charAt(1);
-  document.getElementById("button3").innerHTML = word.charAt(2);
-  document.getElementById("button4").innerHTML = word.charAt(3);
-  document.getElementById("button5").innerHTML = word.charAt(4);
-  
-  for (let i = 1; i < keys.length; i++) {
-      keys[i].setAttribute("data-key", word.charAt(i - 1));
+  function createKeyboardButtons() {
+	  var element = document.getElementById("keyboard_row");
+	  
+	  var enterKey = document.createElement("button");
+	  enterKey.innerHTML = "ENTER";
+	  //enterKey.setAttribute("data-key", "enter");
+	  enterKey.classList.add("wide-button");
+	  enterKey.onclick = handleSubmitWord;
+	  
+	  element.appendChild(enterKey);
+	  
+	  for (let i = 0; i < wordLength; i++){
+		  var newKey = document.createElement("button");
+		  newKey.innerHTML = word.charAt(i);
+		  newKey.setAttribute("data-key", word.charAt(i));
+		  
+		  newKey.onclick = ({ target }) => {
+		  const letter = target.getAttribute("data-key");
+		  
+		  if (guessedWord.length < wordLength){
+			  guessedWord += letter;
+			  updateGuessedWord(letter);
+		  }
+		};
+		  
+		  element.appendChild(newKey);
+	  }
+	  
+	  var deleteKey = document.createElement("button");
+	  deleteKey.innerHTML = "DEL";
+	  //deleteKey.setAttribute("data-key", "del");
+	  deleteKey.classList.add("wide-button");
+	  deleteKey.onclick = handleDeleteLetter;
+	  
+	  element.appendChild(deleteKey);
   }
   
   function getFormattedDate(date) {
@@ -111,24 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	var differenceInDays = differenceInTime / (1000 * 3600 * 24);
 	
 	return differenceInDays;
-  }
-
-  function getCurrentWordArr() {
-    const numberOfGuessedWords = guessedWords.length;
-    return guessedWords[numberOfGuessedWords - 1];
-  }
-
-  function updateGuessedWords(letter) {
-    const currentWordArr = getCurrentWordArr();
-
-    if (currentWordArr && currentWordArr.length < 5) {
-      currentWordArr.push(letter);
-
-      const availableSpaceEl = document.getElementById(String(availableSpace));
-
-      availableSpace = availableSpace + 1;
-      availableSpaceEl.textContent = letter;
-    }
   }
 
   function getEmojiColor(letter, index) {
@@ -166,31 +191,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleSubmitWord() {
-    const currentWordArr = getCurrentWordArr();
-    if (currentWordArr.length !== 5) {
-      window.alert("Word must be 5 letters");
+    if (guessedWord.length !== wordLength) {
+      window.alert(`Word must be ${wordLength} letters`);
 	  return;
     }
 	
-	const firstLetterId = guessedWordCount * 5 + 1;
     const interval = 200;
-	emojiArrangement = "";
-	currentWordArr.forEach((letter, index) => {
-	  setTimeout(() => {
-		const tileColor = getTileColor(letter, index);
-		emojiArrangement += getEmojiColor(letter, index);
-
-		const letterId = firstLetterId + index;
-		const letterEl = document.getElementById(letterId);
-		letterEl.classList.add("animate__flipInX");
-		letterEl.style = `background-color:${tileColor};border-color:${tileColor}`;
-	  }, interval * index);
-	});
+	
+	for (let i = 0; i < wordLength; i++){
+		setTimeout(() => {
+			const tileColor = getTileColor(guessedWord.charAt(i), i);
+			emojiArrangement += getEmojiColor(guessedWord.charAt(i), i);
+			const letterEl = document.getElementById(i + 1);
+			letterEl.classList.add("animate__flipInX");
+			letterEl.style = `background-color:${tileColor};border-color:${tileColor}`;
+		}, interval * i);
+	}
 	
 	setTimeout(() => {
-		const currentWord = currentWordArr.join("");
-		
-		if(currentWord === word) {
+		if(guessedWord === word) {
 			score = `Word ${dayNumber} 1/1\n`;
 			score += emojiArrangement;
 			score += "\nhttps://davicous.github.io/";
@@ -207,15 +226,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		
 		modal_container.classList.add('show');
 		
-	}, interval * 6);
-	
-	guessedWordCount += 1;
+	}, interval * (wordLength + 1));
   }
 
   function createSquares() {
     const gameBoard = document.getElementById("board");
 
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < wordLength; index++) {
       let square = document.createElement("div");
       square.classList.add("square");
       square.classList.add("animate__animated");
@@ -225,15 +242,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleDeleteLetter() {
-    const currentWordArr = getCurrentWordArr();
-    const removedLetter = currentWordArr.pop();
-
-    guessedWords[guessedWords.length - 1] = currentWordArr;
-
-    const lastLetterEl = document.getElementById(String(availableSpace - 1));
+    const lastLetterEl = document.getElementById(String(guessedWord.length));
 
     lastLetterEl.textContent = "";
-    availableSpace = availableSpace - 1;
+	
+	guessedWord = guessedWord.slice(0, -1);
   }
   
   function shareScore() {
@@ -245,21 +258,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	  window.alert("Copied to clipboard!");
   }
 
-  for (let i = 0; i < keys.length; i++) {
-    keys[i].onclick = ({ target }) => {
-      const letter = target.getAttribute("data-key");
+  function updateGuessedWord(letter) {
+	  const availableSpaceEl = document.getElementById(String(guessedWord.length));
 
-      if (letter === "enter") {
-        handleSubmitWord();
-        return;
-      }
-
-      if (letter === "del") {
-        handleDeleteLetter();
-        return;
-      }
-
-      updateGuessedWords(letter);
-    };
+	  availableSpaceEl.textContent = letter;
   }
 });
